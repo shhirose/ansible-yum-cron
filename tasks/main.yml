@@ -1,0 +1,22 @@
+---
+- name: Install yum-cron
+  yum:
+    name: {{ item.name }}
+    state: {{ item.state }}
+  with_items: "{{ shhirose_yum-cron_packages }}"
+  tags:
+    - yum-cron
+    - install
+    - system
+
+- name: Copy configuration files
+  template:
+    src: {{ item.src }}
+    dest: {{ item.dest }}
+  with_items: "{{ shhirose_yum-cron_config-files }}"
+  tags:
+    - yum-cron
+    - install
+    - system
+
+- include: "{{ ansible_service_mgr }}.yml"

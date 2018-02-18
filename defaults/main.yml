@@ -1,0 +1,42 @@
+---
+shhirose_yum-cron_packages:
+  - name: yum-cron
+    state: latest
+
+shhirose_yum-cron_daily:
+  update_cmd: default
+  update_messages: 'yes'
+  download_updates: 'yes'
+  apply_updates: 'no'
+  random_sleep: 360
+  system_name: None
+  emit_via: stdio
+  output_width: 80
+  email_from: root@localhost
+  email_to: root
+  email_host: localhost
+  group_list: None
+  group_package_types: mandatory, default
+  debuglevel: -2
+  #skip_broken: 'True'
+  mdpolicy: group:main
+  #assumeyes: 'True'
+
+shhirose_yum-cron_hourly:
+  update_cmd: default
+  update_messages: 'no'
+  download_updates: 'no'
+  apply_updates: 'no'
+  random_sleep: 15
+  system_name: None
+  emit_via: stdio
+  output_width: 80
+  email_from: root
+  email_to: root
+  email_host: localhost
+  group_list: None
+  group_package_types: mandatory, default
+  debuglevel: -2
+  #skip_broken: 'True'
+  mdpolicy: group:main
+  #assumeyes: 'True'

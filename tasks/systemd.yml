@@ -1,0 +1,6 @@
+---
+- name: Service started
+  systemd:
+    name: yum-cron
+    enabled: yes
+    state: started

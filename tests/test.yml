@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  become: yes
+  roles:
+    - shhirose.yum-cron
+  vars:
+    shhirose_yum-cron_daily:
+      update_cmd: 'security'
+      apply_updates: 'yes'
+    shhirose_yum-cron_hourly:
+      update_cmd: 'minimal'
+      download_updates: 'yes'
