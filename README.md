@@ -1,6 +1,6 @@
 # shhirose.yum-cron
 
-[![Build Status](https://travis-ci.org/shhirose/ansible-yum-cron.svg?branch=master)](https://travis-ci.org/shhirose/ansible-yun-cron)
+[![Build Status](https://travis-ci.org/shhirose/ansible-yum-cron.svg?branch=master)](https://travis-ci.org/shhirose/ansible-yum-cron)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 
 This is Ansible role for yum-cron install and setting for RedHat Enterprise Linux.
@@ -12,7 +12,7 @@ None
 ## Role Variables
 
 ```
-shhirose_yum-cron_daily:
+shhirose_yum_cron_daily:
   update_cmd: default
   update_messages: 'yes'
   download_updates: 'yes'
@@ -31,7 +31,7 @@ shhirose_yum-cron_daily:
   mdpolicy: group:main
   #assumeyes: 'True'
 
-shhirose_yum-cron_hourly:
+shhirose_yum_cron_hourly:
   update_cmd: default
   update_messages: 'no'
   download_updates: 'no'
@@ -53,7 +53,7 @@ shhirose_yum-cron_hourly:
 
 ## Variable parameters
 
-### shhirose_yum-cron_daily
+### shhirose_yum_cron_daily
 
 | key | required | default | type | values | notes |
 | --- | --- | --- | --- | --- | --- |
@@ -75,7 +75,7 @@ shhirose_yum-cron_hourly:
 | mdpolicy | no | group:main | string |  |  |
 | assumeyes | no | comment out | string | True or False | Uncomment to auto-import new gpg keys (dangerous) |
 
-### shhirose_yum-cron_hourly
+### shhirose_yum_cron_hourly
 
 | key | required | default | type | values | notes |
 | --- | --- | --- | --- | --- | --- |
@@ -109,7 +109,7 @@ None
   roles:
     - shhirose.yum-cron
   vars:
-    shhirose_yum-cron_daily:
+    shhirose_yum_cron_daily:
       apply_updates: 'yes'
 ```
 

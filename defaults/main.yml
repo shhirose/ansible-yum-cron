@@ -1,9 +1,9 @@
 ---
-shhirose_yum-cron_packages:
+shhirose_yum_cron_packages:
   - name: yum-cron
     state: latest
 
-shhirose_yum-cron_daily:
+shhirose_yum_cron_daily:
   update_cmd: default
   update_messages: 'yes'
   download_updates: 'yes'
@@ -22,7 +22,7 @@ shhirose_yum-cron_daily:
   mdpolicy: group:main
   #assumeyes: 'True'
 
-shhirose_yum-cron_hourly:
+shhirose_yum_cron_hourly:
   update_cmd: default
   update_messages: 'no'
   download_updates: 'no'

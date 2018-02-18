@@ -7,63 +7,63 @@
 # minimal                            = yum --bugfix update-minimal
 # minimal-security                   = yum --security update-minimal
 # minimal-security-severity:Critical =  --sec-severity=Critical update-minimal
-update_cmd = {{ shhirose_yum-cron_hourly.update_cmd }}
+update_cmd = {{ shhirose_yum_cron_hourly.update_cmd | default('default') }}
 
 # Whether a message should emitted when updates are available.
-update_messages = {{ shhirose_yum-cron_hourly.update_messages }}
+update_messages = {{ shhirose_yum_cron_hourly.update_messages | default('no') }}
 
 # Whether updates should be downloaded when they are available. Note
 # that updates_messages must also be yes for updates to be downloaded.
-download_updates = {{ shhirose_yum-cron_hourly.download_updates }}
+download_updates = {{ shhirose_yum_cron_hourly.download_updates | default('no') }}
 
 # Whether updates should be applied when they are available.  Note
 # that both update_messages and download_updates must also be yes for
 # the update to be applied
-apply_updates = {{ shhirose_yum-cron_hourly.apply_updates }}
+apply_updates = {{ shhirose_yum_cron_hourly.apply_updates | default('no') }}
 
 # Maximum amout of time to randomly sleep, in minutes.  The program
 # will sleep for a random amount of time between 0 and random_sleep
 # minutes before running.  This is useful for e.g. staggering the
 # times that multiple systems will access update servers.  If
 # random_sleep is 0 or negative, the program will run immediately.
-random_sleep = {{ shhirose_yum-cron_hourly.random_sleep }}
+random_sleep = {{ shhirose_yum_cron_hourly.random_sleep | default(15) }}
 
 
 [emitters]
 # Name to use for this system in messages that are emitted.  If
 # system_name is None, the hostname will be used.
-system_name = {{ shhirose_yum-cron_hourly.system_name }}
+system_name = {{ shhirose_yum_cron_hourly.system_name | default('None') }}
 
 # How to send messages.  Valid options are stdio and email.  If
 # emit_via includes stdio, messages will be sent to stdout; this is useful
 # to have cron send the messages.  If emit_via includes email, this
 # program will send email itself according to the configured options.
 # If emit_via is None or left blank, no messages will be sent.
-emit_via = {{ shhirose_yum-cron_hourly.emit_via }}
+emit_via = {{ shhirose_yum_cron_hourly.emit_via | default('stdio') }}
 
 # The width, in characters, that messages that are emitted should be
 # formatted to.
-output_width = {{ shhirose_yum-cron_hourly.output_width }}
+output_width = {{ shhirose_yum_cron_hourly.output_width | default(80) }}
 
 
 [email]
 # The address to send email messages from.
 # NOTE: 'localhost' will be replaced with the value of system_name.
-email_from = {{ shhirose_yum-cron_hourly.email_from }}
+email_from = {{ shhirose_yum_cron_hourly.email_from | default('root') }}
 
 # List of addresses to send messages to.
-email_to = {{ shhirose_yum-cron_hourly.email_to }}
+email_to = {{ shhirose_yum_cron_hourly.email_to | default('root') }}
 
 # Name of the host to connect to to send email messages.
-email_host = {{ shhirose_yum-cron_hourly.email_host }}
+email_host = {{ shhirose_yum_cron_hourly.email_host | default('localhost') }}
 
 
 [groups]
 # List of groups to update
-group_list = {{ shhirose_yum-cron_hourly.group_list }}
+group_list = {{ shhirose_yum_cron_hourly.group_list | default('None') }}
 
 # The types of group packages to install
-group_package_types = {{ shhirose_yum-cron_hourly.group_package_types }}
+group_package_types = {{ shhirose_yum_cron_hourly.group_package_types | default('mandatory, default') }}
 
 [base]
 # This section overrides yum.conf
@@ -72,14 +72,14 @@ group_package_types = {{ shhirose_yum-cron_hourly.group_package_types }}
 # -4: critical
 # -3: critical+errors
 # -2: critical+errors+warnings (default)
-debuglevel = {{ shhirose_yum-cron_hourly.debuglevel }}
+debuglevel = {{ shhirose_yum_cron_hourly.debuglevel | default(-2) }}
 
-{% if shhirose_yum-cron.skip_broken is defined %}
-skip_broken = {{ shhirose_yum-cron_hourly.skip_broken }}
+{% if shhirose_yum_cron_hourly.skip_broken is defined %}
+skip_broken = {{ shhirose_yum_cron_hourly.skip_broken }}
 {% endif %}
-mdpolicy = {{ shhirose_yum-cron_hourly.mdpolicy }}
+mdpolicy = {{ shhirose_yum_cron_hourly.mdpolicy | default('group:main') }}
 
 # Uncomment to auto-import new gpg keys (dangerous)
-{% if shhirose_yum-cron_hourly.assumeyes is defined %}
-assumeyes = {{ shhirose_yum-cron_hourly.assumeyes }}
+{% if shhirose_yum_cron_hourly.assumeyes is defined %}
+assumeyes = {{ shhirose_yum_cron_hourly.assumeyes }}
 {% endif %}

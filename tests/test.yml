@@ -2,11 +2,11 @@
 - hosts: localhost
   become: yes
   roles:
-    - shhirose.yum-cron
+    - ../../../ansible-yum-cron
   vars:
-    shhirose_yum-cron_daily:
+    shhirose_yum_cron_daily:
       update_cmd: 'security'
       apply_updates: 'yes'
-    shhirose_yum-cron_hourly:
+    shhirose_yum_cron_hourly:
       update_cmd: 'minimal'
       download_updates: 'yes'

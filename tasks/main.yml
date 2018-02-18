@@ -1,9 +1,9 @@
 ---
 - name: Install yum-cron
   yum:
-    name: {{ item.name }}
-    state: {{ item.state }}
-  with_items: "{{ shhirose_yum-cron_packages }}"
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items: "{{ shhirose_yum_cron_packages }}"
   tags:
     - yum-cron
     - install
@@ -11,12 +11,13 @@
 
 - name: Copy configuration files
   template:
-    src: {{ item.src }}
-    dest: {{ item.dest }}
-  with_items: "{{ shhirose_yum-cron_config-files }}"
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items: "{{ shhirose_yum_cron_config_files }}"
   tags:
     - yum-cron
     - install
     - system
 
-- include: "{{ ansible_service_mgr }}.yml"
+#- import_tasks: "{{ ansible_service_mgr }}.yml"
+- include_tasks: "{{ ansible_service_mgr }}.yml"

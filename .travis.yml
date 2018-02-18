@@ -23,17 +23,17 @@ script:
   - sudo docker run -dt --privileged --volume="${PWD}":/temp/ansible-yum-cron ${os}${version}:ansible /sbin/init > "${container_id}"
 
   - sudo docker exec -t "$(cat ${container_id})" ansible-playbook /temp/ansible-yum-cron/tests/test.yml -i /temp/ansible-yum-cron/tests/inventory --syntax-check
-  - sudo docker exec -t "$(cat ${container_id})" ansible-playbook /temp/ansible-yum-cron/tests/test.yml -i /temp/ansible-yum-cron/tests/inventory
-  - sudo docker exec -t "$(cat ${container_id})" ansible-playbook /temp/ansible-yum-cron/tests/test.yml -i /temp/ansible-yum-cron/tests/inventory | grep -q 'changed=0.*failed=0' && (echo "" && exit 0) || (echo 'Changed or failed after retry' && exit 1)
+  - sudo docker exec -t "$(cat ${container_id})" ansible-playbook /temp/ansible-yum-cron/tests/test.yml -i /temp/ansible-yum-cron/tests/inventory -c local
+  - sudo docker exec -t "$(cat ${container_id})" ansible-playbook /temp/ansible-yum-cron/tests/test.yml -i /temp/ansible-yum-cron/tests/inventory -c local | grep -q 'changed=0.*failed=0' && (echo "" && exit 0) || (echo 'Changed or failed after retry' && exit 1)
 
-  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "update_cmd = security" && if [ `echo $?` -ne 0 ]; then exit 1 fi
-  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "apply_updates = yes" && if [ `echo $?` -ne 0 ]; then exit 1 fi
-  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "email_to = root" && if [ `echo $?` -ne 0 ]; then exit 1 fi
-  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "assumeyes" && if [ `echo $?` -eq 0 ]; then exit 1 fi
-  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron-hourly.conf | grep "update_cmd = minimal" && if [ `echo $?` -ne 0 ]; then exit 1 fi
-  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron-hourly.conf | grep "download_updates = yes" && if [ `echo $?` -ne 0 ]; then exit 1 fi
-  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron-hourly.conf | grep "apply_updates = no" && if [ `echo $?` -ne 0 ]; then exit 1 fi
-  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron-hourly.conf | grep "assumeyes" && if [ `echo $?` -eq 0 ]; then exit 1 fi
+  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "update_cmd = security"; if [ $? -ne 0 ]; then exit 1; fi
+  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "apply_updates = yes"; if [ $? -ne 0 ]; then exit 1; fi
+  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "email_to = root"; if [ $? -ne 0 ]; then exit 1; fi
+  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "assumeyes"; if [ $? -eq 0 ]; then exit 1; fi
+  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron-hourly.conf | grep "update_cmd = minimal"; if [ $? -ne 0 ]; then exit 1; fi
+  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron-hourly.conf | grep "download_updates = yes"; if [ $? -ne 0 ]; then exit 1; fi
+  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron-hourly.conf | grep "apply_updates = no"; if [ $? -ne 0 ]; then exit 1; fi
+  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron-hourly.conf | grep "assumeyes"; if [ $? -eq 0 ]; then exit 1; fi
 
 after_script:
   - sudo docker stop "$(cat ${container_id})"
