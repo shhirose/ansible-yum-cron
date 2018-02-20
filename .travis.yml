@@ -40,5 +40,5 @@ after_script:
 
   - sudo docker rm "$(cat ${container_id})"
 
-notification:
+notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
