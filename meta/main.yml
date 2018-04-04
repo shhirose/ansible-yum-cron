@@ -6,10 +6,8 @@ galaxy_info:
   platforms:
     - name: EL
       versions:
+        - 6
         - 7
-    - name: Amazon
-      versions:
-        - all
   galaxy_tags:
     - system
     - yum

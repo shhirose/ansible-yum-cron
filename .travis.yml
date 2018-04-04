@@ -11,8 +11,9 @@ sudo: required
 
 env:
   matrix:
+    - os=centos version=6 container_id=$(mktemp) ANSIBLE_VERSION=latest
+    - os=centos version=6 container_id=$(mktemp) ANSIBLE_VERSION=2.4.3
     - os=centos version=7 container_id=$(mktemp) ANSIBLE_VERSION=latest
-    - os=centos version=7 container_id=$(mktemp) ANSIBLE_VERSION=2.4.0
     - os=centos version=7 container_id=$(mktemp) ANSIBLE_VERSION=2.4.3
 
 install:
@@ -26,14 +27,18 @@ script:
   - sudo docker exec -t "$(cat ${container_id})" ansible-playbook /temp/ansible-yum-cron/tests/test.yml -i /temp/ansible-yum-cron/tests/inventory -c local
   - sudo docker exec -t "$(cat ${container_id})" ansible-playbook /temp/ansible-yum-cron/tests/test.yml -i /temp/ansible-yum-cron/tests/inventory -c local | grep -q 'changed=0.*failed=0' && (echo "" && exit 0) || (echo 'Changed or failed after retry' && exit 1)
 
-  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "update_cmd = security"; if [ $? -ne 0 ]; then exit 1; fi
-  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "apply_updates = yes"; if [ $? -ne 0 ]; then exit 1; fi
-  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "email_to = root"; if [ $? -ne 0 ]; then exit 1; fi
-  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "assumeyes"; if [ $? -eq 0 ]; then exit 1; fi
-  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron-hourly.conf | grep "update_cmd = minimal"; if [ $? -ne 0 ]; then exit 1; fi
-  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron-hourly.conf | grep "download_updates = yes"; if [ $? -ne 0 ]; then exit 1; fi
-  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron-hourly.conf | grep "apply_updates = no"; if [ $? -ne 0 ]; then exit 1; fi
-  - sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron-hourly.conf | grep "assumeyes"; if [ $? -eq 0 ]; then exit 1; fi
+  - if [ ${version} -ge 7 ]; then sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "update_cmd = security"; if [ $? -ne 0 ]; then exit 1; fi fi
+  - if [ ${version} -ge 7 ]; then sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "apply_updates = yes"; if [ $? -ne 0 ]; then exit 1; fi fi
+  - if [ ${version} -ge 7 ]; then sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "email_to = root"; if [ $? -ne 0 ]; then exit 1; fi fi
+  - if [ ${version} -ge 7 ]; then sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "assumeyes"; if [ $? -eq 0 ]; then exit 1; fi fi
+  - if [ ${version} -ge 7 ]; then sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron-hourly.conf | grep "update_cmd = minimal"; if [ $? -ne 0 ]; then exit 1; fi fi
+  - if [ ${version} -ge 7 ]; then sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron-hourly.conf | grep "download_updates = yes"; if [ $? -ne 0 ]; then exit 1; fi fi
+  - if [ ${version} -ge 7 ]; then sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron-hourly.conf | grep "apply_updates = no"; if [ $? -ne 0 ]; then exit 1; fi fi
+  - if [ ${version} -ge 7 ]; then sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron-hourly.conf | grep "assumeyes"; if [ $? -eq 0 ]; then exit 1; fi fi
+  - if [ ${version} -eq 6 ]; then sudo docker exec -t "$(cat ${container_id})" cat /etc/sysconfig/yum-cron | grep "CHECK_FIRST=yes"; if [ $? -ne 0 ]; then exit 1; fi fi
+  - if [ ${version} -eq 6 ]; then sudo docker exec -t "$(cat ${container_id})" cat /etc/sysconfig/yum-cron | grep "ERROR_LEVEL=1"; if [ $? -ne 0 ]; then exit 1; fi fi
+  - if [ ${version} -eq 6 ]; then sudo docker exec -t "$(cat ${container_id})" cat /etc/sysconfig/yum-cron | grep 'RANDOMWAIT="60"'; if [ $? -ne 0 ]; then exit 1; fi fi
+  - if [ ${version} -eq 6 ]; then sudo docker exec -t "$(cat ${container_id})" cat /etc/sysconfig/yum-cron | grep "SERVICE_WAITS=yes"; if [ $? -ne 0 ]; then exit 1; fi fi
 
 after_script:
   - sudo docker stop "$(cat ${container_id})"

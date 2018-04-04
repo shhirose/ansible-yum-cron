@@ -1,0 +1,20 @@
+FROM centos:6
+
+ARG ANSIBLE_VERSION
+
+RUN set -x \
+  && yum update -y \
+  && yum install -y \
+         gcc \
+         binutils \
+         python \
+         python-devel \
+         python-setuptools \
+         openssl \
+         openssl-devel \
+         openssh \
+         libffi-devel \
+  && curl -kL https://bootstrap.pypa.io/get-pip.py | python \
+  && pip install PyCrypto \
+  && pip install wheel==0.29.0 \
+  && if [ "${ANSIBLE_VERSION}" = "latest" ]; then pip install ansible; else pip install ansible\==${ANSIBLE_VERSION}; fi
