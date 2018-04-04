@@ -40,3 +40,18 @@ shhirose_yum_cron_hourly:
   #skip_broken: 'True'
   mdpolicy: group:main
   #assumeyes: 'True'
+
+shhirose_yum_cron:
+  yum_parameter: ''
+  check_only: 'no'
+  check_first: 'no'
+  download_only: 'no'
+  error_level: 0
+  debug_level: 0
+  randomwaite: 60
+  email_to: ''
+  system_name: ''
+  days_of_week: ''
+  cleanday: '0'
+  service_waits: 'yes'
+  service_wait_time: 300

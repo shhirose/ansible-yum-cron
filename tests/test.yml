@@ -10,3 +10,6 @@
     shhirose_yum_cron_hourly:
       update_cmd: 'minimal'
       download_updates: 'yes'
+    shhirose_yum_cron:
+      check_first: 'yes'
+      error_level: 1

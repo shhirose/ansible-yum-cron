@@ -49,11 +49,28 @@ shhirose_yum_cron_hourly:
   #skip_broken: 'True'
   mdpolicy: group:main
   #assumeyes: 'True'
+
+shhirose_yum_cron:
+  yum_parameter: ''
+  check_only: 'no'
+  check_first: 'no'
+  download_only: 'no'
+  error_level: 0
+  debug_level: 0
+  randomwaite: 60
+  email_to: ''
+  system_name: ''
+  days_of_week: ''
+  cleanday: '0'
+  service_waits: 'yes'
+  service_wait_time: 300
 ```
 
 ## Variable parameters
 
 ### shhirose_yum_cron_daily
+
+This is variable paramters for RedHat Enterprise Linux 7 or later.
 
 | key | required | default | type | values | notes |
 | --- | --- | --- | --- | --- | --- |
@@ -77,6 +94,8 @@ shhirose_yum_cron_hourly:
 
 ### shhirose_yum_cron_hourly
 
+This is variable paramters for RedHat Enterprise Linux 7 or later.
+
 | key | required | default | type | values | notes |
 | --- | --- | --- | --- | --- | --- |
 | update_cmd | no | default | string | default, security, security-severity:Critical, minimal, minimal-security, or minimal-security-severity:Critical | What kind of update to use |
@@ -96,6 +115,27 @@ shhirose_yum_cron_hourly:
 | skip_broken | no | comment out | string | True or False |  |
 | mdpolicy | no | group:main | string |  |  |
 | assumeyes | no | comment out | string | True or False | Uncomment to auto-import new gpg keys (dangerous) |
+
+
+### shhirose_yum_cron
+
+This is variable paramters for RedHat Enterprise Linux 6
+
+| key | required | default | type | values | notes |
+| --- | --- | --- | --- | --- | --- |
+| yum_parameter | no | None | string |  | Pass any given paramter to yum, as run in all the scripts invoked by this package. |
+| check_only | no | no | string | yes or no | Don't install, just check |
+| check_first | no | no | string | yes or no | Check to see if you can reach the repos before updating |
+| download_only | no | no | string | yes or no | Don't install, just check and download |
+| error_level | no | 0 | int | 6 | Error level, practical range 0-10, 0 means print only critical errors which you must be told, 1 means print all errors, even ones that are not important |
+| debug_level | no | 0 | int | 6 | Debug level, practical range 0-10, higher number means more output Level 1 is a useful level if you want to see what's been done and don't want to read /var/log/yum.log |
+| randomwaite | no | 60 | string | 60 | randomwait is used by yum to wait random time |
+| email_to | no | root | string | hoge | List of addresses to send messages to. |
+| system_name | no | hostname | string | 'hogehoge' | you may set SYSTEMNAME if you want your yum emails tagged differently |
+| days_of_week | no | '0123456' | string | '016' | you may set DAYS_OF_WEEK to the days of the week you want to run |
+| cleanday | no | '0' | string | '0' | which day should it do cleanup on?  defaults to 0 (Sunday). |
+| service_waits | no | 'yes' | string | 'yes' | set to yes to make the yum-cron service to wait for transactions to complete |
+| service_wait_time | no | 300 | int | 300 | set maximum time period (in seconds) for the yum-cron service to wait for transactions to complete. |
 
 ## Dependencies
 
