@@ -1,1 +1,2 @@
-localhost
+[target]
+target.host

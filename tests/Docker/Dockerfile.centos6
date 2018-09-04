@@ -1,0 +1,5 @@
+FROM centos:6
+
+RUN set -x \
+  && yum update -y \
+  && yum install -y upstart
