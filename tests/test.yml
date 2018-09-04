@@ -1,8 +1,8 @@
 ---
-- hosts: localhost
-  become: yes
+- hosts: all
+  connection: docker
   roles:
-    - ../../../ansible-yum-cron
+    - ../ansible-yum-cron
   vars:
     shhirose_yum_cron_daily:
       update_cmd: 'security'

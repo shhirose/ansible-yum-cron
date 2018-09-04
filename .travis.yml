@@ -12,20 +12,25 @@ sudo: required
 env:
   matrix:
     - os=centos version=6 container_id=$(mktemp) ANSIBLE_VERSION=latest
+    - os=centos version=6 container_id=$(mktemp) ANSIBLE_VERSION=2.6.3
+    - os=centos version=6 container_id=$(mktemp) ANSIBLE_VERSION=2.5.8
     - os=centos version=6 container_id=$(mktemp) ANSIBLE_VERSION=2.4.3
     - os=centos version=7 container_id=$(mktemp) ANSIBLE_VERSION=latest
+    - os=centos version=7 container_id=$(mktemp) ANSIBLE_VERSION=2.6.3
+    - os=centos version=7 container_id=$(mktemp) ANSIBLE_VERSION=2.5.8
     - os=centos version=7 container_id=$(mktemp) ANSIBLE_VERSION=2.4.3
 
 install:
-  - sudo docker pull ${os}:${version}
-  - sudo docker build --file tests/travis/Dockerfile.${os}${version} --tag=${os}${version}:ansible tests/travis --build-arg ANSIBLE_VERSION=${ANSIBLE_VERSION}
+  - if [ "${ANSIBLE_VERSION}" = "latest" ]; then sudo pip install ansible; else sudo pip install ansible==${ANSIBLE_VERSION}; fi
+  - docker pull ${os}:${version}
+  - docker build --file tests/Docker/Dockerfile.${os}${version} --tag=${os}${version} tests/Docker
 
 script:
-  - sudo docker run -dt --privileged --volume="${PWD}":/temp/ansible-yum-cron ${os}${version}:ansible /sbin/init > "${container_id}"
+  - docker run --privileged -d --name target.host ${os}${version} /sbin/init > "${container_id}"
 
-  - sudo docker exec -t "$(cat ${container_id})" ansible-playbook /temp/ansible-yum-cron/tests/test.yml -i /temp/ansible-yum-cron/tests/inventory --syntax-check
-  - sudo docker exec -t "$(cat ${container_id})" ansible-playbook /temp/ansible-yum-cron/tests/test.yml -i /temp/ansible-yum-cron/tests/inventory -c local
-  - sudo docker exec -t "$(cat ${container_id})" ansible-playbook /temp/ansible-yum-cron/tests/test.yml -i /temp/ansible-yum-cron/tests/inventory -c local | grep -q 'changed=0.*failed=0' && (echo "" && exit 0) || (echo 'Changed or failed after retry' && exit 1)
+  - ansible-playbook -i tests/inventory tests/test.yml --syntax-check
+  - ansible-playbook -i tests/inventory tests/test.yml
+  - ansible-playbook -i tests/inventory tests/test.yml | grep -q 'changed=0.*failed=0' && (echo "" && exit 0) || (echo 'Changed or failed after retry' && exit 1)
 
   - if [ ${version} -ge 7 ]; then sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "update_cmd = security"; if [ $? -ne 0 ]; then exit 1; fi fi
   - if [ ${version} -ge 7 ]; then sudo docker exec -t "$(cat ${container_id})" cat /etc/yum/yum-cron.conf | grep "apply_updates = yes"; if [ $? -ne 0 ]; then exit 1; fi fi
